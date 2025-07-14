@@ -17,15 +17,16 @@ def call(cmd, testing):
 def core(res):
     "Core function, directly called or called via main"
 
+    # move file from TODO to INPROG
+    sshcmd = 'mv /iranet/groups/ulu/c.groeneveld/LoDeSS_cal/PROGRESS/TODO/' + res["obsid"] + ' /iranet/groups/ulu/c.groeneveld/LoDeSS_cal/PROGRESS/INPROG/'
+    cmd = f'ssh c.groeneveld@gaia.ira.inaf.it "{sshcmd}"'
+    call(cmd, res["testing"])
+
     os.mkdir(res["obsid"])
     os.chdir(res["obsid"])
     cmd_staging = f'LOFAR_stager.py -o {res["obsid"]} -c --nobug'
     call(cmd_staging, res["testing"])
 
-    # move file from TODO to INPROG
-    sshcmd = 'mv /iranet/groups/ulu/c.groeneveld/LoDeSS_cal/PROGRESS/TODO/' + res["obsid"] + ' /iranet/groups/ulu/c.groeneveld/LoDeSS_cal/PROGRESS/INPROG/'
-    cmd = f'ssh c.groeneveld@gaia.ira.inaf.it "{sshcmd}"'
-    call(cmd, res["testing"])
     # Check if the staging is not affected by the bug
     if not res["testing"]:
         nfiles = glob.glob('*')

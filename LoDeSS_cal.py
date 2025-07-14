@@ -14,17 +14,8 @@ def call(cmd, testing):
         print(f"Executing: {cmd}")
         os.system(cmd)
 
-
-def main():
-    parser = argparse.ArgumentParser(description="LoDeSS Calibration")
-    # For now, only obsid is supported. Maybe different in future
-    parser.add_argument("obsid", type=str,
-                        help="Observation ID")
-    parser.add_argument("--testing", help=argparse.SUPPRESS,
-                        action="store_true", default=False)
-    res = parser.parse_args()
-
-    res = vars(res)
+def core(res):
+    "Core function, directly called or called via main"
 
     os.mkdir(res["obsid"])
     os.chdir(res["obsid"])
@@ -89,6 +80,18 @@ def main():
     sshcmd = 'rm /iranet/groups/ulu/c.groeneveld/LoDeSS_cal/PROGRESS/INPROG/' + res["obsid"]
     cmd = f'ssh c.groeneveld@gaia.ira.inaf.it "{sshcmd}"'
     call(cmd, res["testing"])
+
+def main():
+    parser = argparse.ArgumentParser(description="LoDeSS Calibration")
+    # For now, only obsid is supported. Maybe different in future
+    parser.add_argument("obsid", type=str,
+                        help="Observation ID")
+    parser.add_argument("--testing", help=argparse.SUPPRESS,
+                        action="store_true", default=False)
+    res = parser.parse_args()
+
+    res = vars(res)
+    core(res)
 
 
 if __name__ == "__main__":

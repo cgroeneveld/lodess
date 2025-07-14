@@ -1,2 +1,2 @@
-# lodess
+# LoDeSS
 LOFAR Decameter Sky Survey

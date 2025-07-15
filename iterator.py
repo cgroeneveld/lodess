@@ -36,10 +36,10 @@ def main():
             # Copy LoDeSS_cal before importing core
             sys.path.append(res.lodess_path)
             from LoDeSS_cal import core
-            res = {}
-            res["obsid"] = random_obsid
-            res["testing"] = False  # Set to True for testing mode
-            core(res)  # main run
+            coreres = {}
+            coreres["obsid"] = random_obsid
+            coreres["testing"] = False  # Set to True for testing mode
+            core(coreres)  # main run
 
             # check if STOP file exists
             if os.path.exists('STOP'):

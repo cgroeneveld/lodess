@@ -23,6 +23,7 @@ def main():
                 tb.removecols('CORRECTED_DATA')
             if 'DATA_SUB' in tb.colnames() and args.remove_corrected:
                 print('removing DATA_SUB column from %s'%fl)
+                tb.removecols('DATA_SUB')
             for col in colnamelist:
                 if 'MODEL_DATA' in col and args.remove_model:
                     print('removing %s column from %s'%(col,fl))

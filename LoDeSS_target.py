@@ -43,7 +43,7 @@ def main():
         obsid_dict[obsid] = targets.split(',')
 
 
-    devel = True
+    devel = False
     if not devel:
         # Create a target directory
         os.mkdir(res["target"])

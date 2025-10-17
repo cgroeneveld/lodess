@@ -1,6 +1,10 @@
 import sys,glob,os
 import argparse
 
+'''
+    Convenience script to allow access to the public calibrator surfdrive
+'''
+
 
 def download_file_from_surf(filename):
     # Download a file from the SURFdrive archive

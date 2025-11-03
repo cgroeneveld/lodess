@@ -132,20 +132,27 @@ def main():
 
     # Run DDparallel
 
-    os.mkdir('DD_parallel')
-    os.chdir('DD_parallel')
-    os.mkdir('mss')
-    itera = 0
-    for obsid in obsids:
-        TCL = glob.glob(f'../id{obsid}_-_{res["target"]}/mss/*')
-        TCL = sorted(TCL)
-        for i in TCL:
-            os.system(f'cp -r {i} mss/TC0{itera}.MS')
-            itera += 1
+    if not devel:
+        os.mkdir('DD')
+        os.chdir('DD')
+        os.mkdir('mss')
+        itera = 0
+        for obsid in obsids:
+            TCL = glob.glob(f'../id{obsid}_-_{res["target"]}/mss/*')
+            TCL = sorted(TCL)
+            for i in TCL:
+                os.system(f'cp -r {i} mss/TC0{itera}.MS')
+                itera += 1
 
 
-    cmd = 'LOFAR_ddparallel.py'
+        cmd = 'LOFAR_ddparallel.py'
+        call(cmd, res["testing"])
+    else:
+        os.chdir('DD')
+
+    cmd = 'LOFAR_ddserial.py'
     call(cmd, res["testing"])
+
 
 if __name__ == "__main__":
     main()

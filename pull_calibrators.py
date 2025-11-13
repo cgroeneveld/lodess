@@ -9,6 +9,8 @@ import argparse
 def download_file_from_surf(filename):
     # Download a file from the SURFdrive archive
     url = f'https://surfdrive.surf.nl/index.php/s/F34o4kCVMvpcb06/download?path=%2F&files={filename}'
+    url = f'https://surfdrive.surf.nl/remote.php/dav/files/groeneveldc%40leidenuniv.nl/LoDeSS_calibrators/{filename}'
+    url = f'https://surfdrive.surf.nl/public.php/dav/files/fenDYKZ2RPekCT3/{filename}'
     os.system(f'wget -O {filename} "{url}"')
 
 def main():

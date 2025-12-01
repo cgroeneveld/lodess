@@ -12,7 +12,7 @@ from awlofar.main.aweimports import CorrelatedDataProduct, \
 
 def download_file_from_surf(filename):
     # Download a file from the SURFdrive archive
-    url = f'https://surfdrive.surf.nl/index.php/s/F34o4kCVMvpcb06/download?path=%2F&files={filename}'
+    url = f'https://surfdrive.surf.nl/public.php/dav/files/fenDYKZ2RPekCT3/{filename}'
     os.system(f'wget -O {filename} "{url}"')
 
 def call(cmd, testing):
@@ -164,6 +164,11 @@ def main():
     cmd = 'LOFAR_ddserial.py'
     call(cmd, res["testing"])
 
+    with open('../target.txt','w') as handle:
+        handle.write(res['target'])
+
+    cmd = 'LOFAR_quality.py'
+    call(cmd,res["testing"])
 
 if __name__ == "__main__":
     main()

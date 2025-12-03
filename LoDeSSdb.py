@@ -12,6 +12,10 @@ import pymysql
 USERNAME = 'groeneveld'
 DEFAULT_FILE_PYMYSQL = '/home/groeneveld/.my.cnf'
 
+def download_file_from_surf(filename):
+    # Download a file from the SURFdrive archive
+    url = f'https://surfdrive.surf.nl/public.php/dav/files/fenDYKZ2RPekCT3/{filename}'
+    os.system(f'wget -O {filename} "{url}"')
 
 sshtunnel_dict = {
     'remote_bind_address': ('127.0.0.1', 3306),
@@ -41,7 +45,18 @@ def main(args):
     ) as tunnel:
         if args.command == 'test-connection':
             out = runcmd("SELECT now()")[0][0]
-            print(f"Connection successful, server time: {out}")
+            print(f"Connection to database successful, server time: {out}")
+            test2 = os.system(f"rclone --config={DEFAULT_FILE_PYMYSQL} ls gdrivelodess:/")
+            if test2 == 0:
+                print('Successful connection with rclone')
+            else:
+                print("Rclone failed")
+            download_file_from_surf('obsidlist.txt')
+            if os.path.exists('obsidlist.txt'):
+                print("Calibrator host is avail")
+                os.system('rm -rf obsidlist.txt')
+            else:
+                print("ERROR: calibrator host down")
         if args.command == 'inprog':
             # set field status to INPROG
             cmd = f"UPDATE fields SET status='INPROG' WHERE id='{args.field}';"

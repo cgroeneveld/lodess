@@ -61,6 +61,7 @@ def main(args):
             # set field status to INPROG
             cmd = f"UPDATE fields SET status='INPROG' WHERE id='{args.field}';"
             runcmd(cmd)
+            runcmd(f"UPDATE fields SET start_date=NOW() WHERE id='{args.field}';"
             print(f"Field {args.field} set to INPROG")
         if args.command == 'todo':
             # set field status to TODO
@@ -80,6 +81,7 @@ def main(args):
             runcmd(f"UPDATE fields SET nvss_ratio={quality['nvss_ratio']} WHERE id='{args.field}';")
             runcmd(f"UPDATE fields SET nvss_match={quality['nvss_match']} WHERE id='{args.field}';")
             runcmd(f"UPDATE fields SET flag_frac={quality['flag_frac']} WHERE id='{args.field}';")
+            runcmd(f"UPDATE fields SET end_date=NOW() WHERE id='{args.field}';"
 
         if args.command == 'error':
             # set field status to ERROR
@@ -130,14 +132,9 @@ def main(args):
             os.system(f'tar -czf {args.field}.tar.gz {args.field}')
 
             # Connect to FTP and upload
-            ftp = ftplib.FTP('ftp.ira.inaf.it', 'anonymous', 'anonymous')
-            ftp.cwd('pub/incoming/c.groeneveld')
-            with open(f'{args.field}.tar.gz', 'rb') as f:
-                ftp.storbinary(f'STOR {args.field}.tar.gz', f, 8192)
-            with open(f'{args.field}.fits', 'rb') as f:
-                ftp.storbinary(f'STOR {args.field}.fits', f, 8192)
-            ftp.quit()
-            print(f"Uploaded data for field {args.field} to FTP server.")
+            os.system(f'rclone copy {args.field}.tar.gz gdrivelodess:{args.field}.tar.gz -P')
+            os.system(f'rclone copy {args.field}.fits gdrivelodess:{args.field}.fits -P')
+            print(f"Uploaded data for field {args.field} to the google drive.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Interact with LoDeSS database")

@@ -1,4 +1,4 @@
-import os,sys,glob
+import os,sys,glob,pickle
 import numpy as np
 import argparse
 import ftplib
@@ -57,6 +57,14 @@ def main(args):
             runcmd(cmd)
             print(f"Field {args.field} set to FINISHED")
             # here be some code for quality control. maybe separate? maybe not.
+            with open('DD/quality/quality.pickle','rb') as handle:
+                quality = pickle.load(handle)
+
+            runcmd(f"UPDATE fields SET noise={quality['ddserial_c0_rms']} WHERE id='{args.field}';"
+            runcmd(f"UPDATE fields SET nvss_ratio={quality['nvss_ratio']} WHERE id='{args.field}';"
+            runcmd(f"UPDATE fields SET nvss_match={quality['nvss_match']} WHERE id='{args.field}';"
+            runcmd(f"UPDATE fields SET flag_frac={quality['flag_frac']} WHERE id='{args.field}';"
+
         if args.command == 'error':
             # set field status to ERROR
             cmd = f"UPDATE fields SET status='ERROR' WHERE id='{args.field}';"
@@ -80,6 +88,7 @@ def main(args):
             # Things to copy: ddparallel images, ddparallel logs, ddparallel solutions
             # ddserial imges, ddserial logs, ddserial solutions
             # msfiles
+            # run this in mss folder (not in DD folder!)
             abspath = os.path.abspath(args.path)
             os.mkdir(args.field)
             os.chdir(args.field)

@@ -10,6 +10,7 @@ from sshtunnel import SSHTunnelForwarder
 import pymysql
 
 USERNAME = 'groeneveld'
+DEFAULT_FILE_PYMYSQL = '/home/groeneveld/.my.cnf'
 
 
 sshtunnel_dict = {
@@ -21,7 +22,7 @@ sshtunnel_dict = {
 
 def runcmd(cmd):
     conn = pymysql.connect(
-        read_default_file='/home/groeneveld/.my.cnf',
+        read_default_file=DEFAULT_FILE_PYMYSQL,
         database='lodess'
     )
     with conn.cursor() as cur:

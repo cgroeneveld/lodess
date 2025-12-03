@@ -60,10 +60,10 @@ def main(args):
             with open('DD/quality/quality.pickle','rb') as handle:
                 quality = pickle.load(handle)
 
-            runcmd(f"UPDATE fields SET noise={quality['ddserial_c0_rms']} WHERE id='{args.field}';"
-            runcmd(f"UPDATE fields SET nvss_ratio={quality['nvss_ratio']} WHERE id='{args.field}';"
-            runcmd(f"UPDATE fields SET nvss_match={quality['nvss_match']} WHERE id='{args.field}';"
-            runcmd(f"UPDATE fields SET flag_frac={quality['flag_frac']} WHERE id='{args.field}';"
+            runcmd(f"UPDATE fields SET noise={quality['ddserial_c0_rms']} WHERE id='{args.field}';")
+            runcmd(f"UPDATE fields SET nvss_ratio={quality['nvss_ratio']} WHERE id='{args.field}';")
+            runcmd(f"UPDATE fields SET nvss_match={quality['nvss_match']} WHERE id='{args.field}';")
+            runcmd(f"UPDATE fields SET flag_frac={quality['flag_frac']} WHERE id='{args.field}';")
 
         if args.command == 'error':
             # set field status to ERROR

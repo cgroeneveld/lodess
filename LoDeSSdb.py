@@ -10,7 +10,7 @@ from sshtunnel import SSHTunnelForwarder
 import pymysql
 
 USERNAME = 'groeneveld'
-DEFAULT_FILE_PYMYSQL = '/home/groeneveld/.my.cnf'
+DEFAULT_FILE_PYMYSQL = '~/.my.cnf'
 
 
 sshtunnel_dict = {

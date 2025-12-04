@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import os,sys,glob,pickle
 import numpy as np
 import argparse
@@ -9,8 +11,10 @@ warnings.filterwarnings(action='ignore', module='cryptography')
 from sshtunnel import SSHTunnelForwarder
 import pymysql
 
+home = os.environ['HOME']
+
 USERNAME = 'groeneveld'
-DEFAULT_FILE_PYMYSQL = '~/.my.cnf'
+DEFAULT_FILE_PYMYSQL = home+'/.my.cnf'
 
 def download_file_from_surf(filename):
     # Download a file from the SURFdrive archive
@@ -44,24 +48,29 @@ def main(args):
         **sshtunnel_dict
     ) as tunnel:
         if args.command == 'test-connection':
-            out = runcmd("SELECT now()")[0][0]
+            allsuccess = True
+            out = runcmd("SELECT now()")[0][0] # This should otherwise crash 
             print(f"Connection to database successful, server time: {out}")
             test2 = os.system(f"rclone --config={DEFAULT_FILE_PYMYSQL} ls gdrivelodess:/")
             if test2 == 0:
                 print('Successful connection with rclone')
             else:
                 print("Rclone failed")
+                allsuccess = False
             download_file_from_surf('obsidlist.txt')
             if os.path.exists('obsidlist.txt'):
                 print("Calibrator host is avail")
                 os.system('rm -rf obsidlist.txt')
             else:
+                allsuccess = False
                 print("ERROR: calibrator host down")
+            if allsuccess:
+                print("ALL TESTS OK")
         if args.command == 'inprog':
             # set field status to INPROG
             cmd = f"UPDATE fields SET status='INPROG' WHERE id='{args.field}';"
             runcmd(cmd)
-            runcmd(f"UPDATE fields SET start_date=NOW() WHERE id='{args.field}';"
+            runcmd(f"UPDATE fields SET start_date=NOW() WHERE id='{args.field}';")
             print(f"Field {args.field} set to INPROG")
         if args.command == 'todo':
             # set field status to TODO
@@ -81,7 +90,7 @@ def main(args):
             runcmd(f"UPDATE fields SET nvss_ratio={quality['nvss_ratio']} WHERE id='{args.field}';")
             runcmd(f"UPDATE fields SET nvss_match={quality['nvss_match']} WHERE id='{args.field}';")
             runcmd(f"UPDATE fields SET flag_frac={quality['flag_frac']} WHERE id='{args.field}';")
-            runcmd(f"UPDATE fields SET end_date=NOW() WHERE id='{args.field}';"
+            runcmd(f"UPDATE fields SET end_date=NOW() WHERE id='{args.field}';")
 
         if args.command == 'error':
             # set field status to ERROR
@@ -129,11 +138,13 @@ def main(args):
             os.system(f'cp -r {abspath}/pipeline-quality.logger .')
             os.chdir('..')
             os.system(f'cp -r {abspath}/ddserial/c00/images/wideDDS-c0-MFS-image-pb.fits {args.field}.fits')
-            os.system(f'tar -czf {args.field}.tar.gz {args.field}')
+            os.system(f'tar -cf {args.field}.tar {args.field}')
+            print("Compressing...")
+            os.system(f'pigz {args.field}.tar')
 
             # Connect to FTP and upload
-            os.system(f'rclone copy {args.field}.tar.gz gdrivelodess:{args.field}.tar.gz -P')
-            os.system(f'rclone copy {args.field}.fits gdrivelodess:{args.field}.fits -P')
+            os.system(f'rclone --config={DEFAULT_FILE_PYMYSQL} copy {args.field}.tar.gz gdrivelodess:{args.field}.tar.gz -P')
+            os.system(f'rclone --config={DEFAULT_FILE_PYMYSQL} copy {args.field}.fits gdrivelodess:{args.field}.fits -P')
             print(f"Uploaded data for field {args.field} to the google drive.")
 
 if __name__ == "__main__":
@@ -153,7 +164,7 @@ if __name__ == "__main__":
     finishedap.add_argument('field', type=str, help='Field to mark as FINISHED')
     errorap.add_argument('field', type=str, help='Field to mark as ERROR')
     uploadap.add_argument('field', type=str, help='Field to upload')
-    uploadap.add_argument('--path','-p', type=str, default='./', help='Path to folder with DD data')
+    uploadap.add_argument('--path','-p', type=str, default='./DD', help='Path to folder with DD data')
 
     args = parser.parse_args()
     main(args)

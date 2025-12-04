@@ -13,8 +13,32 @@ import pymysql
 
 home = os.environ['HOME']
 
-USERNAME = 'groeneveld'
+'''
+ === How to run ===
+This pipeline builds on LiLF. However, since we are using a different setup, we made a few
+different choices. Firstly, you need to Leiden Observatory account, for that contact me
+(c.groeneveld@ira.inaf.it) and I will tell you more. Then, you need to add your ssh public
+key to the ~/.ssh/authorized_keys/ file on the home disk of the Leiden Observatory.
+
+After that, you need an account for the mysql server, for that you need to send me an email.
+I will then provide a .my.cnf file that you need to put in the home folder (see the 
+DEFAULT_FILE_PYMYSQL variable).
+
+Finally, make sure you have your StageIt API token stored in your ~/.staginrc . Note that we
+now use a different stager, so your old username/password combo does not work anymore!!
+
+'''
+
+# 
+# === EDIT THESE TWO LINES ===
+#
+
+USERNAME = 'groeneveld' # username for leiden observatory intranet
 DEFAULT_FILE_PYMYSQL = home+'/.my.cnf'
+
+#
+# ==========
+#
 
 def download_file_from_surf(filename):
     # Download a file from the SURFdrive archive

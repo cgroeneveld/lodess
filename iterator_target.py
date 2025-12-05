@@ -23,7 +23,7 @@ def main():
     if args.single:
         run_single_target(args.field)
     elif args.continuous:
-        field = os.popen('LoDeSSdb.py pullrandom').read()
+        field = os.popen('LoDeSSdb.py pullrandom').read().split(': ')[-1]
         print(field)
 
 if __name__ == '__main__':

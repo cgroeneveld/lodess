@@ -23,8 +23,13 @@ def main():
     if args.single:
         run_single_target(args.field)
     elif args.continuous:
-        field = os.popen('LoDeSSdb.py pullrandom').read().split(': ')[-1]
-        print(field)
+        while True:
+            field = os.popen('LoDeSSdb.py pullrandom').read().split(': ')[-1]
+            run_single_target(field)
+            # check if STOP file exists
+            if os.path.exists('STOP'):
+                print("STOP file found, exiting.")
+                sys.exit(0)
 
 if __name__ == '__main__':
     main()

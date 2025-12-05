@@ -30,11 +30,13 @@ now use a different stager, so your old username/password combo does not work an
 '''
 
 # 
-# === EDIT THESE TWO LINES ===
+# === EDIT THESE LINES ===
 #
 
 USERNAME = 'groeneveld' # username for leiden observatory intranet
 DEFAULT_FILE_PYMYSQL = home+'/.my.cnf'
+MACHINE = 'LOFAR15'
+HOSTNAME = 'IRA'
 
 #
 # ==========
@@ -95,6 +97,9 @@ def main(args):
             cmd = f"UPDATE fields SET status='INPROG' WHERE id='{args.field}';"
             runcmd(cmd)
             runcmd(f"UPDATE fields SET start_date=NOW() WHERE id='{args.field}';")
+            runcmd(f"UPDATE fields SET username='{USERNAME}' WHERE id='{args.field}';")
+            runcmd(f"UPDATE fields SET clustername='{HOSTNAME}' WHERE id='{args.field}';")
+            runcmd(f"UPDATE fields SET nodename='{MACHINE}' WHERE id='{args.field}';")
             print(f"Field {args.field} set to INPROG")
         if args.command == 'todo':
             # set field status to TODO

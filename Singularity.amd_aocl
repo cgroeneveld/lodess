@@ -7,6 +7,7 @@ From: fedora:40
 
 %files
     /usr/bin/getopt /usr/bin/getopt
+    requirements_out.txt /opt/requirements_freeze.txt
 
 %arguments
         HAS_CUDA=false
@@ -24,18 +25,18 @@ From: fedora:40
     export PYTHON_VERSION=3.12
 
     # Settings relevant to the installed software.
-    export AOFLAGGER_VERSION=v3.4.0
-    export CASACORE_VERSION=8e2648a
+    export AOFLAGGER_VERSION=ae522544
+    export CASACORE_VERSION=v3.7.1
     export DDFPIPELINE_VERSION=df58808
-    export DP3_VERSION=714fe614
+    export DP3_VERSION=a35da935
     export EVERYBEAM_VERSION=c180e429
     export HDF5_VERSION=1.14.5
-    export IDG_VERSION=1.2.0
+    export IDG_VERSION=a5675159
     export LOSOTO_VERSION=e4ed09a
     export OPENBLAS_VERSION=v0.3.29
-    export PYBDSF_VERSION=v1.11.0
+    export PYBDSF_VERSION=8471637
     export PYTHON_CASACORE_VERSION=3.6.1
-    export WSCLEAN_VERSION=f38e3bfe
+    export WSCLEAN_VERSION=8c11e6cb
     export HDF5_USE_FILE_LOCKING=FALSE
     export OMPI_ALLOW_RUN_AS_ROOT=1
 
@@ -260,12 +261,12 @@ From: fedora:40
     uv pip install "numpy<2"
     uv pip install --no-binary pandas pandas
     uv pip install --no-binary h5py h5py
-    uv pip install -r $INSTALLDIR/flocs/requirements.txt
+    uv pip install -r /opt/requirements_freeze.txt
+    uv pip install --force-reinstall -v "scipy==1.15.3"
     # Install facetselfcal this way to make sure data gets installed.
     cd /opt/lofar
     git clone https://github.com/rvweeren/lofar_facet_selfcal.git
     uv pip install ./lofar_facet_selfcal
-    rm -rf lofar_facet_selfcal
     # Install this separately since it keeps forcefully downgrading numpy.
     #pip install --no-deps lofarSun
     uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
@@ -483,7 +484,9 @@ From: fedora:40
     rm -rf $INSTALLDIR/DP3/build
     rm -rf $INSTALLDIR/DP3/src
     mkdir $INSTALLDIR/DP3/usermodules
-    wget https://raw.githubusercontent.com/jurjen93/lofar_helpers/master/dp3_helpers/polconv.py -O $INSTALLDIR/DP3/usermodules/polconv.py
+    cp $INSTALLDIR/lofar_facet_selfcal/submods/polconv.py $INSTALLDIR/DP3/usermodules/polconv.py
+
+
 
     #
     # LSMTool (367dfd3e)
@@ -505,6 +508,7 @@ From: fedora:40
     cd $INSTALLDIR/losoto/build
     git clone https://github.com/revoltek/losoto.git src
     cd src
+    git checkout 3962e8a
     # Some fixes for certain LoSoTo versions until it is fixed upstream.
     find . -type f -name '*.py' -exec sed -i 's/np\.float16(weights)/weights.astype(float)/' {} \;
     find . -type f -name '*.py' -exec sed -i 's/np\.float16/float/g' {} \;

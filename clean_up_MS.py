@@ -32,6 +32,9 @@ def main():
                     elif 'PREDICT' in col and args.remove_model:
                         print('removing %s column from %s'%(col,fl))
                         tb.removecols(col)
+                    elif 'patch' in col and args.remove_model:
+                        print('removing %s column from %s'%(col,fl))
+                        tb.removecols(col)
         except RuntimeError as ex:
             print('error processing %s: %s'%(fl,ex))
 

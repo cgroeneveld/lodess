@@ -30,7 +30,7 @@ From: fedora:40
     export CASACORE_VERSION=a67610f
     export DDFPIPELINE_VERSION=df58808
     export DP3_VERSION=a35da935
-    export EVERYBEAM_VERSION=c180e429
+    export EVERYBEAM_VERSION=v0.7.4
     export HDF5_VERSION=1.14.5
     export IDG_VERSION=a5675159
     export LOSOTO_VERSION=e4ed09a

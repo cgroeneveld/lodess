@@ -28,7 +28,7 @@ From: fedora:40
     export AOFLAGGER_VERSION=ae522544
     export CASACORE_VERSION=a67610f
     export DDFPIPELINE_VERSION=df58808
-    export DP3_VERSION=a35da935
+    export DP3_VERSION=1f0e36c0
     export EVERYBEAM_VERSION=v0.7.4
     export HDF5_VERSION=1.14.5
     export IDG_VERSION=a5675159
@@ -90,6 +90,7 @@ From: fedora:40
     dnf -y install wget
     wget https://raw.githubusercontent.com/tikk3r/flocs/fedora-py3/dnf-packages.txt -O $INSTALLDIR/dnf-packages.txt
     dnf -y install $(<$INSTALLDIR/dnf-packages.txt)
+    dnf -y install eog
     wget --progress=bar:force:noscroll https://download.oracle.com/otn_software/linux/instantclient/2360000/oracle-instantclient-basic-23.6.0.24.10-1.el9.x86_64.rpm
     dnf -y install oracle-instantclient-basic-23.6.0.24.10-1.el9.x86_64.rpm
     rm oracle-instantclient-basic-*.rpm
@@ -344,6 +345,7 @@ From: fedora:40
         -DUSE_OPENMP=True \
         -DUSE_HDF5=True \
         -DBUILD_DYSCO=ON \
+        -DBUILD_SISCO=ON \
         -DBLAS_LIBRARIES="${AOCL_ROOT}/lib/libblis.so" \
         -DFFTW3_LIBRARY="${AOCL_ROOT}/lib/libfftw3.so" \
         -DFFTW3_THREADS_LIBRARY="${AOCL_ROOT}/lib/libfftw3_threads.so" \
@@ -729,18 +731,6 @@ From: fedora:40
     # Install VLBI-cwl
     cd $INSTALLDIR
     git clone https://git.astron.nl/RD/VLBI-cwl.git
-
-    #
-    # Install custom runners
-    #
-    mkdir -p /opt/lofar/runners
-    cd /opt/lofar/
-    cp flocs/runners/run* ./runners/
-    cp -r flocs/utility /opt/lofar/
-    rm -rf flocs
-    chmod 755 /opt/lofar/runners/*.sh
-    chmod 755 /opt/lofar/utility/*.sh
-    cd $INSTALLDIR
 
     #
     # Finaly cleanup of unnecessary stuff

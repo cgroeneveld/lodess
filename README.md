@@ -1,2 +1,15 @@
 # LoDeSS
 LOFAR Decameter Sky Survey
+
+## Checklist
+1. Build a container for your machine. For this, you need to pick either the AMD or Intel container, and use the right settings for march/mtune
+2. Configure LoDeSSdb.py with your Leiden STRW username and the location of your .my.conf file (ask me if you need one)
+3. Add your .ssh/id_rsa.pub (public key) to the `.ssh/authorized_hosts` file on the home disk of the Leiden STRW server
+4. Open the apptainer image
+5. run `ulimit -n 8000`
+6. add the LiLF/ directory to your $PYTHONPATH
+7. add the LiLF/scripts and LiLF/pipelines to your $PATH
+8. add the lodess/ directory to your $PATH
+9. Make sure that you have enough space on your disk (around 1.5 TB should be fine, data is compressed afterwards and uploaded)
+10. Run `python LoDeSSdb.py test-connection` to verify if rclone/mysql connection is up
+11. Run `python iterator_target.py -c`

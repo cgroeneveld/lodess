@@ -154,6 +154,7 @@ def main(args):
             os.system(f'cp -r {abspath}/ddserial/c00/images .')
             os.system(f'cp -r {abspath}/ddserial/c00/solutions/interp.h5 ddserial.h5')
             os.system(f'cp -r {abspath}/ddserial/c00/solutions/facetsS-c0.reg .')
+            os.system(f'cp -r {abspath}/ddserial/c00/skymodel/ddcals-c0.reg .')
             os.chdir('..')
             os.mkdir('ddparallel')
             os.chdir('ddparallel')

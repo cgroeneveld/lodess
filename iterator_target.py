@@ -6,7 +6,11 @@ def run_single_target(target_name):
     os.system('LoDeSSdb.py test-connection')
     os.system(f'LoDeSSdb.py inprog {target_name}')
     print(f'Starting field {target_name}')
-    os.system(f'LoDeSS_target.py {target_name}')
+    outcode = os.system(f'LoDeSS_target.py {target_name}')
+    outcode = outcode >> 8
+    if outcode != 0:
+        print(f"LoDeSS failed with exit code {outcode}")
+        sys.exit(outcode)
     os.chdir('../')
     os.system(f'LoDeSSdb.py finished {target_name}')
     os.system(f'LoDeSSdb.py upload {target_name}')

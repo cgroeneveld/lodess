@@ -37,6 +37,7 @@ USERNAME = 'groeneveld' # username for leiden observatory intranet
 DEFAULT_FILE_PYMYSQL = home+'/.my.cnf'
 MACHINE = 'LOFAR15'
 HOSTNAME = 'IRA'
+LOCAL_PORT = 3307
 
 #
 # ==========
@@ -49,7 +50,7 @@ def download_file_from_surf(filename):
 
 sshtunnel_dict = {
     'remote_bind_address': ('127.0.0.1', 3306),
-    'local_bind_address': ('127.0.0.1', 3306),
+    'local_bind_address': ('127.0.0.1', LOCAL_PORT),
     'ssh_username': USERNAME,
     'ssh_pkey': '~/.ssh/id_rsa',
 }
@@ -57,7 +58,8 @@ sshtunnel_dict = {
 def runcmd(cmd):
     conn = pymysql.connect(
         read_default_file=DEFAULT_FILE_PYMYSQL,
-        database='lodess'
+        database='lodess',
+        port=LOCAL_PORT
     )
     with conn.cursor() as cur:
         cur.execute(cmd)

@@ -10,6 +10,7 @@ def run_single_target(target_name):
     outcode = outcode >> 8
     if outcode != 0:
         print(f"LoDeSS failed with exit code {outcode}")
+        os.system(f'LoDeSSdb.py error {target_name}')
         sys.exit(outcode)
     os.chdir('../')
     os.system(f'LoDeSSdb.py finished {target_name}')

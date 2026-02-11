@@ -103,6 +103,10 @@ def main(args):
             runcmd(f"UPDATE fields SET clustername='{HOSTNAME}' WHERE id='{args.field}';")
             runcmd(f"UPDATE fields SET nodename='{MACHINE}' WHERE id='{args.field}';")
             print(f"Field {args.field} set to INPROG")
+        if args.command == 'error':
+            cmd = f"UPDATE fields SET status='ERROR' WHERE id='{args.field}';"
+            runcmd(cmd)
+            print(f"Field {args.field} set to ERROR")
         if args.command == 'todo':
             # set field status to TODO
             cmd = f"UPDATE fields SET status='TODO' WHERE id='{args.field}';"

@@ -24,6 +24,7 @@ def main():
     parser.add_argument('-s','--single',action='store_true')
     parser.add_argument('-c','--continuous',action='store_true')
     parser.add_argument('-f','--field',type=str)
+    parser.add_argument('-d','--delete_after',action='store_true')
     args = parser.parse_args()
     if args.single:
         run_single_target(args.field)
@@ -35,6 +36,8 @@ def main():
             if os.path.exists('STOP'):
                 print("STOP file found, exiting.")
                 sys.exit(0)
+    if args.delete_after:
+        print(f'Deleting {args.field}')
 
 if __name__ == '__main__':
     main()

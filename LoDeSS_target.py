@@ -21,7 +21,11 @@ def call(cmd, testing):
         print(f"Testing mode: {cmd}")
     else:
         print(f"Executing: {cmd}")
-        os.system(cmd)
+        outcode = os.system(cmd)
+        outcode >> 8
+        if outcode != 0:
+            print('Error in cmd: '+cmd)
+            sys.exit(outcode)
 
 
 def main():
@@ -126,7 +130,7 @@ def main():
         for obsid in obsids:
             os.chdir(f'id{obsid}_-_{res["target"]}')
             os.mkdir('data-bkp')
-            call('mv * data-bkp', res["testing"])
+            os.system('mv * data-bkp')
 
             # Set up the conf file for timesplit
             conf_file = 'LiLF.conf'

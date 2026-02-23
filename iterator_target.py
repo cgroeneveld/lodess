@@ -14,7 +14,7 @@ def run_single_target(target_name):
         print(f"LoDeSS failed with exit code {outcode}")
         os.system(f'LoDeSSdb.py error {target_name}')
         sys.exit(outcode)
-    os.chdir('../')
+    os.chdir(f'{target_name}/mss')
     os.system(f'LoDeSSdb.py finished {target_name}')
     os.system(f'LoDeSSdb.py upload {target_name}')
     os.chdir('../../')

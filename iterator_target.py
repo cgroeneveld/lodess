@@ -30,16 +30,21 @@ def main():
     args = parser.parse_args()
     if args.single:
         run_single_target(args.field)
+        if args.delete_after:
+            print(f'Deleting {args.field}')
+            os.system(f'rm -rf {args.field}')
     elif args.continuous:
         while True:
             field = os.popen('LoDeSSdb.py pullrandom').read().split(': ')[-1]
             run_single_target(field)
             # check if STOP file exists
+            if args.delete_after:
+                print(f'Deleting {field}')
+                os.system(f'rm -rf {field}')
+
             if os.path.exists('STOP'):
                 print("STOP file found, exiting.")
                 sys.exit(0)
-    if args.delete_after:
-        print(f'Deleting {args.field}')
 
 if __name__ == '__main__':
     main()

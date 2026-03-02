@@ -35,7 +35,7 @@ def main():
             os.system(f'rm -rf {args.field}')
     elif args.continuous:
         while True:
-            field = os.popen('LoDeSSdb.py pullrandom').read().split(': ')[-1]
+            field = os.popen('LoDeSSdb.py pullrandom').read().split(': ')[-1].rstrip('\n')
             run_single_target(field)
             # check if STOP file exists
             if args.delete_after:

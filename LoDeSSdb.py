@@ -35,8 +35,8 @@ now use a different stager, so your old username/password combo does not work an
 
 USERNAME = 'groeneveld' # username for leiden observatory intranet
 DEFAULT_FILE_PYMYSQL = home+'/.my.cnf'
-MACHINE = 'LOFAR15'
-HOSTNAME = 'IRA'
+MACHINE = 'rijn7'
+HOSTNAME = 'STRW'
 LOCAL_PORT = 3307
 
 #
@@ -79,11 +79,13 @@ def main(args):
             allsuccess = True
             out = runcmd("SELECT now()")[0][0] # This should otherwise crash 
             print(f"Connection to database successful, server time: {out}")
-            test2 = os.system(f"rclone --config={DEFAULT_FILE_PYMYSQL} ls gdrivelodess:/")
+
+            test2 = os.system(f'ssh {USERNAME}@hoendiep.strw.leidenuniv.nl ls /net/rijn8/data2/groeneveld/archive')
+            # test2 = os.system(f"rclone --config={DEFAULT_FILE_PYMYSQL} ls gdrivelodess:/")
             if test2 == 0:
-                print('Successful connection with rclone')
+                print('Successful connection with ssh')
             else:
-                print("Rclone failed")
+                print("SSH RIJN8 failed")
                 allsuccess = False
             download_file_from_surf('obsidlist.txt')
             if os.path.exists('obsidlist.txt'):
@@ -179,8 +181,10 @@ def main(args):
             os.system(f'pigz {args.field}.tar')
 
             # Connect to FTP and upload
-            os.system(f'rclone --config={DEFAULT_FILE_PYMYSQL} copy {args.field}.tar.gz gdrivelodess:{args.field}.tar.gz -P')
-            os.system(f'rclone --config={DEFAULT_FILE_PYMYSQL} copy {args.field}.fits gdrivelodess:{args.field}.fits -P')
+            #os.system(f'rclone --config={DEFAULT_FILE_PYMYSQL} copy {args.field}.tar.gz gdrivelodess:{args.field}.tar.gz -P')
+            #os.system(f'rclone --config={DEFAULT_FILE_PYMYSQL} copy {args.field}.fits gdrivelodess:{args.field}.fits -P')
+            os.system(f'rsync {args.field}.fits {USERNAME}@hoendiep.strw.leidenuniv.nl:/net/rijn8/data2/groeneveld/archive/ --chmod=Fu=rwx,Fg=rw,Fo=rw')
+            os.system(f'rsync {args.field}.tar.gz {USERNAME}@hoendiep.strw.leidenuniv.nl:/net/rijn8/data2/groeneveld/archive/ --chmod=Fu=rwx,Fg=rw,Fo=rw')
             print(f"Uploaded data for field {args.field} to the google drive.")
 
 if __name__ == "__main__":

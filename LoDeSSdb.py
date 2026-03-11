@@ -105,6 +105,9 @@ def main(args):
             runcmd(f"UPDATE fields SET clustername='{HOSTNAME}' WHERE id='{args.field}';")
             runcmd(f"UPDATE fields SET nodename='{MACHINE}' WHERE id='{args.field}';")
             print(f"Field {args.field} set to INPROG")
+        if args.command == 'check':
+            cmd = f'SELECT * FROM fields WHERE id="{args.field}";'
+            runcmd(cmd)
         if args.command == 'error':
             cmd = f"UPDATE fields SET status='ERROR' WHERE id='{args.field}';"
             runcmd(cmd)
@@ -185,6 +188,8 @@ def main(args):
             #os.system(f'rclone --config={DEFAULT_FILE_PYMYSQL} copy {args.field}.fits gdrivelodess:{args.field}.fits -P')
             os.system(f'rsync {args.field}.fits {USERNAME}@hoendiep.strw.leidenuniv.nl:/net/rijn8/data2/groeneveld/archive/ --chmod=Fu=rwx,Fg=rw,Fo=rw')
             os.system(f'rsync {args.field}.tar.gz {USERNAME}@hoendiep.strw.leidenuniv.nl:/net/rijn8/data2/groeneveld/archive/ --chmod=Fu=rwx,Fg=rw,Fo=rw')
+            os.system(f'ssh {USERNAME}@hoendiep.strw.leidenuniv.nl "chmod 766 /net/rijn8/data2/groeneveld/archive/{args.field}.fits"')
+            os.system(f'ssh {USERNAME}@hoendiep.strw.leidenuniv.nl "chmod 766 /net/rijn8/data2/groeneveld/archive/{args.field}.tar.gz"')
             print(f"Uploaded data for field {args.field} to the google drive.")
 
 if __name__ == "__main__":

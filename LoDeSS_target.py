@@ -128,7 +128,7 @@ def main():
     if not devel:
         os.chdir('mss')
         for obsid in obsids:
-            os.chdir(f'id{obsid}_-_{res["target"]}')
+            os.chdir(next(d for d in os.listdir('.') if d.lower() == f'id{obsid}_-_{res["target"]}'.lower()))
             os.mkdir('data-bkp')
             os.system('mv * data-bkp')
 
@@ -154,7 +154,7 @@ def main():
         os.mkdir('mss')
         itera = 0
         for obsid in obsids:
-            TCL = glob.glob(f'../id{obsid}_-_{res["target"]}/mss/*')
+            TCL = glob.glob(f'../{next(d for d in os.listdir("..") if d.lower() == f"id{obsid}_-_{res["target"]}".lower())}/mss/*')
             TCL = sorted(TCL)
             for i in TCL:
                 os.system(f'cp -r {i} mss/TC0{itera}.MS')
